@@ -1,0 +1,7 @@
+C:\Users\edilson.csilva10\source\repos\Atividade\correcao\correcao\bin\Debug\correcao.exe.config
+C:\Users\edilson.csilva10\source\repos\Atividade\correcao\correcao\bin\Debug\correcao.exe
+C:\Users\edilson.csilva10\source\repos\Atividade\correcao\correcao\bin\Debug\correcao.pdb
+C:\Users\edilson.csilva10\source\repos\Atividade\correcao\correcao\obj\Debug\correcao.csproj.AssemblyReference.cache
+C:\Users\edilson.csilva10\source\repos\Atividade\correcao\correcao\obj\Debug\correcao.csproj.CoreCompileInputs.cache
+C:\Users\edilson.csilva10\source\repos\Atividade\correcao\correcao\obj\Debug\correcao.exe
+C:\Users\edilson.csilva10\source\repos\Atividade\correcao\correcao\obj\Debug\correcao.pdb
