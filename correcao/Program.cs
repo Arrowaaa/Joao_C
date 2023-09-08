@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace Loja
 {
+    
     class Program
     {
+        
         static List<Produto> produtos = new List<Produto>();
         static double saldo = 0;
 
         static void Main(string[] args)
         {
+            Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("\r\n ____  _  ____  _____  _____ _      ____    ____  ____    ____  _____ _          _  ____  ____  ____ \r\n/ ___\\/ \\/ ___\\/__ __\\/  __// \\__/|/  _ \\  /  _ \\/  _ \\  / ___\\/  __// \\ /\\     / |/  _ \\/  _ \\/  _ \\\r\n|    \\| ||    \\  / \\  |  \\  | |\\/||| / \\|  | | \\|| / \\|  |    \\|  \\  | | ||     | || / \\|| / \\|| / \\|\r\n\\___ || |\\___ |  | |  |  /_ | |  ||| |-||  | |_/|| \\_/|  \\___ ||  /_ | \\_/|  /\\_| || \\_/|| |-||| \\_/|\r\n\\____/\\_/\\____/  \\_/  \\____\\\\_/  \\|\\_/ \\|  \\____/\\____/  \\____/\\____\\\\____/  \\____/\\____/\\_/ \\|\\____/\r\n                                                                                                     \r\n");
             
@@ -26,25 +29,32 @@ namespace Loja
         switch (escolha)
         {
             case 1:
+            
                 CadastrarProduto();
                 continuarCadastrando = PerguntarContinuarCadastrando();
                 break;
             case 2:
+            
                 VenderProduto();
                 continuarCadastrando = PerguntarContinuarCadastrando();
                 break;
             case 3:
+            
                 ComprarProduto();
                 continuarCadastrando = PerguntarContinuarCadastrando();
                 break;
             case 4:
+            
                 GerarRelatorio();
                 continuarCadastrando = PerguntarContinuarCadastrando();
                 break;
             case 5:
+            
+                Console.Clear();
                 continuarCadastrando = false; // Sair do loop e encerrar o programa
                 break;
             default:
+            
                 Console.WriteLine("Opção inválida. Tente novamente.");
                 break;
             }
@@ -92,6 +102,7 @@ static bool PerguntarContinuarCadastrando()
         static void CadastrarProduto()
         {
             Console.Clear();
+            Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("\n CADASTRAR PRODUTO: ");
 
@@ -115,8 +126,9 @@ static bool PerguntarContinuarCadastrando()
         }
          static void VenderProduto()
         {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Clear(); // // Limpa o console com a cor de fundo definida
+            Console.BackgroundColor = ConsoleColor.Cyan; // Definindo a cor de fundo como ciano
+            Console.ForegroundColor = ConsoleColor.Black; //// Definindo a cor do texto como preto para melhor legibilidade
             Console.WriteLine(" VENDA DE PRODUTO: ");
 
             Console.WriteLine("\n Lista de Produtos Disponíveis:");
@@ -168,7 +180,8 @@ static bool PerguntarContinuarCadastrando()
         static void ComprarProduto()
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("\n COMPRAR PRODUTO: ");
 
             Console.Write("\n Nome do Produto: ");
@@ -193,6 +206,7 @@ static bool PerguntarContinuarCadastrando()
         static void GerarRelatorio()
         {
             Console.Clear();
+            Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("\n RELATÓRIO: ");
             ListarProdutos();
