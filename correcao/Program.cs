@@ -148,14 +148,14 @@ static bool PerguntarContinuarCadastrando()
 
         double valorTotal = quantidadeVendida * produto.Preco; // Declare a variável aqui
 
-        Console.Write("\n Escolha a forma de pagamento (1 - Dinheiro, 2 - Cartão, 3 - Outra): ");
+        Console.Write("\n Escolha a forma de pagamento (1 - Dinheiro: , 2 - Cartão - (Débido/Crédito): , 3 - PIX: ): ");
         int formaPagamento = int.Parse(Console.ReadLine());
 
         Venda novaVenda = new Venda
         {
             Produto = produto.Nome,
             ValorTotal = valorTotal,
-            FormaPagamento = formaPagamento == 1 ? "Dinheiro" : (formaPagamento == 2 ? "Cartão" : "Outra")
+            FormaPagamento = formaPagamento == 1 ? "Dinheiro: " : (formaPagamento == 2 ? "Cartão (Débido/Crédito): " : "PIX: ")
         };
 
         vendas.Add(novaVenda); // Adiciona a venda à lista de vendas
