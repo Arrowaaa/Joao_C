@@ -4,12 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+enum FormaPagamento
+//é uma abreviação de "enumeração". É uma estrutura de dados em C# que permite definir um conjunto de valores inteiros nomeados. 
+//Em outras palavras, você pode criar um enum para representar um conjunto limitado de valores que um determinado conceito pode ter.
+{
+    Dinheiro,
+    CartaoDebito,
+    CartaoCredito,
+    PIX
+    
+} //Esses são os valores do enum, também chamados de "enum members" ou membros do enum.
+
+//A vantagem de usar um enum nesse contexto é que ele torna o código mais legível e ajuda a evitar erros de digitação,
+//já que você pode usar esses nomes de enum em vez de números inteiros. Por exemplo, em vez de usar 1 para representar dinheiro e 2 para representar cartão de débito,
+//você pode usar FormaPagamento.Dinheiro e FormaPagamento.CartaoDebito, o que torna o código mais claro e menos suscetível a erros.
+
 namespace Loja
 {
     
     class Program
     {
-        
+    //Estas linhas declaram variáveis estáticas , que é uma lista (ou coleção).
+    //Essas listas são usadas para armazenar objetos dos tipos Produto e Venda ao longo da execução do programa.
+    //Isso permite rastrear e manter um registro de produtos e vendas ao longo do tempo enquanto o programa é executado.
         static List<Produto> produtos = new List<Produto>();
         static List<Venda> vendas = new List<Venda>();
         static double saldo = 0;
@@ -62,7 +79,7 @@ namespace Loja
         }
     }
 
-static bool PerguntarContinuarCadastrando()
+        static bool PerguntarContinuarCadastrando()
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.Write("\n Deseja Regressar ao MENU ? (s/n): ");
@@ -127,35 +144,38 @@ static bool PerguntarContinuarCadastrando()
         }
         
          static void VenderProduto()
-{
-    
-    Console.Clear();
-    Console.BackgroundColor = ConsoleColor.White;
-    Console.ForegroundColor = ConsoleColor.Black;
-    Console.WriteLine(" VENDA DE PRODUTO: ");
+        {
+            Console.Clear();
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine(" VENDA DE PRODUTO: ");
 
-    Console.WriteLine("\n Lista de Produtos Disponíveis:");
-    ListarProdutos();
+            Console.WriteLine("\n Lista de Produtos Disponíveis:");
+            ListarProdutos();
 
-    Console.Write("\n Escolha o número do produto a ser vendido: ");
-    int escolha = int.Parse(Console.ReadLine()) - 1;
+            Console.Write("\n Escolha o número do produto a ser vendido: ");
+            int escolha = int.Parse(Console.ReadLine()) - 1;
 
-    if (escolha >= 0 && escolha < produtos.Count)
-    {
-        Produto produto = produtos[escolha];
-        Console.Write("\n Quantidade de " + produto.Nome + " a ser vendida: ");
-        int quantidadeVendida = int.Parse(Console.ReadLine());
+            if (escolha >= 0 && escolha < produtos.Count)
+        {
+            Produto produto = produtos[escolha];
+            Console.Write("\n Quantidade de " + produto.Nome + " a ser vendida: ");
+            int quantidadeVendida = int.Parse(Console.ReadLine());
 
-        double valorTotal = quantidadeVendida * produto.Preco; // Declare a variável aqui
+            double valorTotal = quantidadeVendida * produto.Preco; // Declare a variável aqui
 
-        Console.Write("\n Escolha a forma de pagamento (1 - Dinheiro: , 2 - Cartão - (Débido/Crédito): , 3 - PIX: ): ");
-        int formaPagamento = int.Parse(Console.ReadLine());
+            Console.Write("\n Escolha a forma de pagamento (1 - Dinheiro: , 2 - Cartão de Débito: , 3 - Cartão de Crédito: , 4 - PIX: ): ");
+            int formaPagamento = int.Parse(Console.ReadLine());
 
-        Venda novaVenda = new Venda
+            Console.Write("\n Quantidade de parcelas (1 a 12): ");
+            int numeroParcelas = int.Parse(Console.ReadLine());
+
+            Venda novaVenda = new Venda
         {
             Produto = produto.Nome,
             ValorTotal = valorTotal,
-            FormaPagamento = formaPagamento == 1 ? "Dinheiro: " : (formaPagamento == 2 ? "Cartão (Débido/Crédito): " : "PIX: ")
+            FormaPagamento = (FormaPagamento)formaPagamento,
+            NumeroParcelas = numeroParcelas
         };
 
         vendas.Add(novaVenda); // Adiciona a venda à lista de vendas
@@ -180,19 +200,19 @@ static bool PerguntarContinuarCadastrando()
             {
                 Console.WriteLine("\n Valor insuficiente para a compra.");
             }
+            }
+            else
+            {
+                Console.WriteLine(" Quantidade insuficiente de " + produto.Nome + " em estoque.");
+            }
         }
         else
         {
-            Console.WriteLine(" Quantidade insuficiente de " + produto.Nome + " em estoque.");
+            Console.WriteLine("\n Produto não encontrado.");
         }
     }
-    else
-    {
-        Console.WriteLine("\n Produto não encontrado.");
-    }
-}
-          static void ComprarProduto()
-          {
+        static void ComprarProduto()
+        {
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -213,27 +233,61 @@ static bool PerguntarContinuarCadastrando()
             Produto novoProduto = new Produto(nome, marca, preco, quantidade);
             produtos.Add(novoProduto);
 
-            saldo -= (preco * quantidade); // Atualizar saldo
-            Console.WriteLine("\n Compra realizada com sucesso!");
-        }
+            // Atualizar o saldo (deduzir o valor da compra)
+            saldo -= (preco * quantidade);
 
-        static void GerarRelatorio()
-        {
-            Console.Clear();
-            Console.BackgroundColor = ConsoleColor.White;
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.WriteLine("\n RELATÓRIO: ");
-            ListarProdutos();
+            Console.Write("\n Escolha a forma de pagamento (1 - Dinheiro: , 2 - Cartão de Débito: , 3 - Cartão de Crédito: , 4 - PIX: ): ");
+            int formaPagamento = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("\n Saldo Total de R$: " + saldo + " Reais.");
+            if (formaPagamento == 3) // Se a forma de pagamento for Cartão de Crédito, pergunte o número de parcelas
+                {
+                    Console.Write("\n Quantidade de parcelas (1 a 12): ");
+                    int numeroParcelas = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("\n Histórico de Vendas:");
-            
-            foreach (var venda in vendas)
+                    // Armazenar a compra com forma de pagamento e parcelas
+                    Venda novaCompra = new Venda
+                {
+                    Produto = novoProduto.Nome,
+                    ValorTotal = (preco * quantidade),
+                    FormaPagamento = (FormaPagamento)formaPagamento,
+                    NumeroParcelas = numeroParcelas
+                };
+
+                vendas.Add(novaCompra);
+                }
+            else
             {
-                Console.WriteLine("Produto: " + venda.Produto + ", + Valor: " + venda.ValorTotal.ToString("F2") + " Reais, Forma de Pagamento: " + venda.FormaPagamento);
+                // Armazenar a compra com forma de pagamento sem parcelas
+                Venda novaCompra = new Venda
+            {       
+                Produto = novoProduto.Nome,
+                ValorTotal = (preco * quantidade),
+                FormaPagamento = (FormaPagamento)formaPagamento,
+                NumeroParcelas = 1 // Defina o número de parcelas como 1 para compras que não são a crédito.
+            };
+
+                vendas.Add(novaCompra);
             }
-        }
+
+                Console.WriteLine("\n Compra realizada com sucesso!");
+            }     
+        static void GerarRelatorio()
+            {
+                Console.Clear();
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                Console.WriteLine("\n RELATÓRIO: ");
+                ListarProdutos();
+
+                Console.WriteLine("\n Saldo Total de R$: " + saldo + " Reais.");
+
+                Console.WriteLine("\n Histórico de Vendas:");
+
+                foreach (var venda in vendas)
+            {
+                Console.WriteLine("Produto: " + venda.Produto + ", Valor: " + venda.ValorTotal.ToString("F2") + " Reais, Forma de Pagamento: " + venda.FormaPagamento + ", Parcelas: " + venda.NumeroParcelas);
+            }
+        } 
 
 
         static void ListarProdutos()
@@ -246,25 +300,26 @@ static bool PerguntarContinuarCadastrando()
         }
     }
         class Venda
-        {
-            public string Produto { get; set; }
-            public double ValorTotal { get; set; }
-            public string FormaPagamento { get; set; }
-        }
+    {
+        public string Produto { get; set; }
+        public double ValorTotal { get; set; }
+        public FormaPagamento FormaPagamento { get; set; }
+        public int NumeroParcelas { get; set; }
+    }
+
 
         class Produto
-         {
-            public int NumeroSerie { get; private set; }
-            public string Nome { get; set; }
-            public string Marca { get; set; }
-            public double Preco { get; set; }
-            public int Quantidade { get; set; }
+    {
+        public int NumeroSerie { get; private set; }
+        public string Nome { get; set; }
+        public string Marca { get; set; }
+        public double Preco { get; set; }
+        public int Quantidade { get; set; }
 
-            private static int proximoNumeroSerie = 1;
+        private static int proximoNumeroSerie = 1;
 
-            public Produto(string nome, string marca, double preco, int quantidade)
+        public Produto(string nome, string marca, double preco, int quantidade)
         {
-            
             NumeroSerie = proximoNumeroSerie++;
             Nome = nome;
             Marca = marca;
