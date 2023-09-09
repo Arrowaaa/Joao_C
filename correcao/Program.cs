@@ -11,6 +11,7 @@ namespace Loja
     {
         
         static List<Produto> produtos = new List<Produto>();
+        static List<Venda> vendas = new List<Venda>();
         static double saldo = 0;
 
         static void Main(string[] args)
@@ -124,61 +125,74 @@ static bool PerguntarContinuarCadastrando()
             Console.WriteLine("\n Produto cadastrado com sucesso!");
             
         }
+        
          static void VenderProduto()
+{
+    
+    Console.Clear();
+    Console.BackgroundColor = ConsoleColor.White;
+    Console.ForegroundColor = ConsoleColor.Black;
+    Console.WriteLine(" VENDA DE PRODUTO: ");
+
+    Console.WriteLine("\n Lista de Produtos Disponíveis:");
+    ListarProdutos();
+
+    Console.Write("\n Escolha o número do produto a ser vendido: ");
+    int escolha = int.Parse(Console.ReadLine()) - 1;
+
+    if (escolha >= 0 && escolha < produtos.Count)
+    {
+        Produto produto = produtos[escolha];
+        Console.Write("\n Quantidade de " + produto.Nome + " a ser vendida: ");
+        int quantidadeVendida = int.Parse(Console.ReadLine());
+
+        double valorTotal = quantidadeVendida * produto.Preco; // Declare a variável aqui
+
+        Console.Write("\n Escolha a forma de pagamento (1 - Dinheiro, 2 - Cartão, 3 - Outra): ");
+        int formaPagamento = int.Parse(Console.ReadLine());
+
+        Venda novaVenda = new Venda
         {
-            Console.Clear(); // // Limpa o console com a cor de fundo definida
-            Console.BackgroundColor = ConsoleColor.Cyan; // Definindo a cor de fundo como ciano
-            Console.ForegroundColor = ConsoleColor.Black; //// Definindo a cor do texto como preto para melhor legibilidade
-            Console.WriteLine(" VENDA DE PRODUTO: ");
+            Produto = produto.Nome,
+            ValorTotal = valorTotal,
+            FormaPagamento = formaPagamento == 1 ? "Dinheiro" : (formaPagamento == 2 ? "Cartão" : "Outra")
+        };
 
-            Console.WriteLine("\n Lista de Produtos Disponíveis:");
-            ListarProdutos();
+        vendas.Add(novaVenda); // Adiciona a venda à lista de vendas
 
-            Console.Write("\n Escolha o número do produto a ser vendido: ");
-            int escolha = int.Parse(Console.ReadLine()) - 1;
+        if (quantidadeVendida <= produto.Quantidade)
+        {
+            Console.WriteLine("\n Total a pagar: R$: " + valorTotal.ToString("F2") + " Reais.");
 
-            if (escolha >= 0 && escolha < produtos.Count)
+            Console.Write("\n Digite o valor pago: ");
+            double valorPago = double.Parse(Console.ReadLine());
+
+            if (valorPago >= valorTotal)
             {
-                Produto produto = produtos[escolha];
-                Console.Write("\n Quantidade de " + produto.Nome + " a ser vendida: ");
-                int quantidadeVendida = int.Parse(Console.ReadLine());
+                double troco = valorPago - valorTotal;
+                Console.WriteLine("\n Troco: R$: " + troco.ToString("F2") + " Reais.");
 
-                if (quantidadeVendida <= produto.Quantidade)
-                {
-                    double valorTotal = quantidadeVendida * produto.Preco;
-                    Console.WriteLine("\n Total a pagar: R$: " + valorTotal + " Reais. ");
-
-                    Console.Write("\n Digite o valor pago: ");
-                    double valorPago = double.Parse(Console.ReadLine());
-
-                    if (valorPago >= valorTotal)
-                    {
-                        double troco = valorPago - valorTotal;
-                        Console.WriteLine("\n Troco: R$: " + troco + " Reais. ");
-
-                        produto.Quantidade -= quantidadeVendida; // Atualizar estoque
-                        saldo += valorTotal; // Atualizar saldo
-                        Console.WriteLine("\n Venda concluída com sucesso!");
-                    }
-                    else
-                    {
-                        Console.WriteLine("\n Valor insuficiente para a compra.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine(" Quantidade insuficiente de " + produto.Nome + " em estoque.");
-                }
+                produto.Quantidade -= quantidadeVendida;
+                saldo += valorTotal;
+                Console.WriteLine("\n Venda concluída com sucesso!");
             }
             else
             {
-                Console.WriteLine("\n Produto não encontrado.");
+                Console.WriteLine("\n Valor insuficiente para a compra.");
             }
-            
         }
-
-        static void ComprarProduto()
+        else
         {
+            Console.WriteLine(" Quantidade insuficiente de " + produto.Nome + " em estoque.");
+        }
+    }
+    else
+    {
+        Console.WriteLine("\n Produto não encontrado.");
+    }
+}
+          static void ComprarProduto()
+          {
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -212,7 +226,15 @@ static bool PerguntarContinuarCadastrando()
             ListarProdutos();
 
             Console.WriteLine("\n Saldo Total de R$: " + saldo + " Reais.");
+
+            Console.WriteLine("\n Histórico de Vendas:");
+            
+            foreach (var venda in vendas)
+            {
+                Console.WriteLine("Produto: " + venda.Produto + ", + Valor: " + venda.ValorTotal.ToString("F2") + " Reais, Forma de Pagamento: " + venda.FormaPagamento);
+            }
         }
+
 
         static void ListarProdutos()
         {
@@ -223,11 +245,15 @@ static bool PerguntarContinuarCadastrando()
             }
         }
     }
+        class Venda
+        {
+            public string Produto { get; set; }
+            public double ValorTotal { get; set; }
+            public string FormaPagamento { get; set; }
+        }
 
         class Produto
-        {
-            
-        
+         {
             public int NumeroSerie { get; private set; }
             public string Nome { get; set; }
             public string Marca { get; set; }
