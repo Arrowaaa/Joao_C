@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO; // Adicionei essa diretiva para usar StreamWriter e StreamReader.
+
 
 enum FormaPagamento
 //é uma abreviação de "enumeração". É uma estrutura de dados em C# que permite definir um conjunto de valores inteiros nomeados. 
 //Em outras palavras, você pode criar um enum para representar um conjunto limitado de valores que um determinado conceito pode ter.
+
 {
     Dinheiro,
     CartaoDebito,
@@ -17,6 +20,7 @@ enum FormaPagamento
 //A vantagem de usar um enum nesse contexto é que ele torna o código mais legível e ajuda a evitar erros de digitação,
 //já que você pode usar esses nomes de enum em vez de números inteiros. Por exemplo, em vez de usar 1 para representar dinheiro e 2 para representar cartão de débito,
 //você pode usar FormaPagamento.Dinheiro e FormaPagamento.CartaoDebito, o que torna o código mais claro e menos suscetível a erros.
+
 
 namespace Loja
 {
@@ -29,58 +33,131 @@ namespace Loja
         static List<Venda> vendas = new List<Venda>();
         static double saldo = 0;
 
-        static void Main(string[] args)
+        // Função para salvar dados
+        static void SalvarDados()
         {
-            Console.BackgroundColor = ConsoleColor.White; // esta linha de código define a cor de fundo do console como branco 
-            Console.ForegroundColor = ConsoleColor.DarkBlue; //esta linha de código define a cor do texto no console para azul escuro
-            Console.WriteLine("\r\n ____  _  ____  _____  _____ _      ____    ____  ____    ____  _____ _          _  ____  ____  ____ \r\n/ ___\\/ \\/ ___\\/__ __\\/  __// \\__/|/  _ \\  /  _ \\/  _ \\  / ___\\/  __// \\ /\\     / |/  _ \\/  _ \\/  _ \\\r\n|    \\| ||    \\  / \\  |  \\  | |\\/||| / \\|  | | \\|| / \\|  |    \\|  \\  | | ||     | || / \\|| / \\|| / \\|\r\n\\___ || |\\___ |  | |  |  /_ | |  ||| |-||  | |_/|| \\_/|  \\___ ||  /_ | \\_/|  /\\_| || \\_/|| |-||| \\_/|\r\n\\____/\\_/\\____/  \\_/  \\____\\\\_/  \\|\\_/ \\|  \\____/\\____/  \\____/\\____\\\\____/  \\____/\\____/\\_/ \\|\\____/\r\n                                                                                                     \r\n");
-
-            bool continuarCadastrando = true;
-
-            while (continuarCadastrando) // loop
+            using (StreamWriter writer = new StreamWriter("dados.txt"))
             {
-                MostrarMenu();
-                int escolha;
-
-                while (!int.TryParse(Console.ReadLine(), out escolha) || escolha < 1 || escolha > 5)
+                // Salvar os produtos
+                foreach (var produto in produtos)
                 {
-                    Console.WriteLine("Opção inválida. Tente novamente.");
-                    MostrarMenu();
+                    Console.WriteLine(produto.Nome + "," + produto.Marca + "," + produto.Preco+ "," + produto.Quantidade);
                 }
 
-                switch (escolha) //estrutura de controle chamada switch, que é usada para tomar decisões com base no valor de escolha.
+                // Salvar as vendas
+                foreach (var venda in vendas)
                 {
-                    case 1:
-                        CadastrarProduto();
-                        continuarCadastrando = PerguntarContinuarCadastrando();
-                        break;
+                   Console.WriteLine(venda.Produto + "," + venda.ValorTotal + "," + venda.FormaPagamento + "," + venda.NumeroParcelas);
 
-                    case 2:
-                        VenderProduto();
-                        continuarCadastrando = PerguntarContinuarCadastrando();
-                        break;
+                }
 
-                    case 3:
-                        ComprarProduto();
-                        continuarCadastrando = PerguntarContinuarCadastrando();
-                        break;
+                // Salvar o saldo
+                writer.WriteLine(saldo);
+            }
+        }
 
-                    case 4:
-                        GerarRelatorio();
-                        continuarCadastrando = PerguntarContinuarCadastrando();
-                        break;
+        // Função para carregar dados
+        static void CarregarDados()
+        {
+            if (File.Exists("dados.txt"))
+            {
+                using (StreamReader reader = new StreamReader("dados.txt"))
+                {
+                    produtos.Clear();
+                    vendas.Clear();
 
-                    case 5:
-                        Console.Clear();
-                        continuarCadastrando = false; // Sair do loop e encerrar o programa
-                        break;
+                    string line;
 
-                    default: //para lidar com escolhas que não correspondem a nenhum dos casos específicos.
-                        Console.WriteLine("Opção inválida. Tente novamente.");
-                        break;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        var parts = line.Split(',');
+                        if (parts.Length == 4)
+                        {
+                            string nome = parts[0];
+                            string marca = parts[1];
+                            double preco = double.Parse(parts[2]);
+                            int quantidade = int.Parse(parts[3]);
+
+                            Produto produto = new Produto(nome, marca, preco, quantidade);
+                            produtos.Add(produto);
+                        }
+                        else if (parts.Length == 4)
+                        {
+                            string produto = parts[0];
+                            double valorTotal = double.Parse(parts[1]);
+                            FormaPagamento formaPagamento = (FormaPagamento)Enum.Parse(typeof(FormaPagamento), parts[2]);
+                            int numeroParcelas = int.Parse(parts[3]);
+
+                            Venda venda = new Venda
+                            {
+                                Produto = produto,
+                                ValorTotal = valorTotal,
+                                FormaPagamento = formaPagamento,
+                                NumeroParcelas = numeroParcelas
+                            };
+
+                            vendas.Add(venda);
+                        }
+                    }
+
+                    if ((line = reader.ReadLine()) != null)
+                    {
+                        saldo = double.Parse(line);
+                    }
                 }
             }
         }
+
+        static void Main(string[] args)
+{
+        Console.BackgroundColor = ConsoleColor.White; // esta linha de código define a cor de fundo do console como branco 
+        Console.ForegroundColor = ConsoleColor.DarkBlue; //esta linha de código define a cor do texto no console para azul escuro
+        Console.WriteLine("\r\n ____  _  ____  _____  _____ _      ____    ____  ____    ____  _____ _          _  ____  ____  ____ \r\n/ ___\\/ \\/ ___\\/__ __\\/  __// \\__/|/  _ \\  /  _ \\/  _ \\  / ___\\/  __// \\ /\\     / |/  _ \\/  _ \\/  _ \\\r\n|    \\| ||    \\  / \\  |  \\  | |\\/||| / \\|  | | \\|| / \\|  |    \\|  \\  | | ||     | || / \\|| / \\|| / \\|\r\n\\___ || |\\___ |  | |  |  /_ | |  ||| |-||  | |_/|| \\_/|  \\___ ||  /_ | \\_/|  /\\_| || \\_/|| |-||| \\_/|\r\n\\____/\\_/\\____/  \\_/  \\____\\\\_/  \\|\\_/ \\|  \\____/\\____/  \\____/\\____\\\\____/  \\____/\\____/\\_/ \\|\\____/\r\n                                                                                                     \r\n");
+        CarregarDados();
+
+    bool continuarCadastrando = true;
+
+    while (continuarCadastrando) // loop
+    {
+        MostrarMenu(); 
+
+        int escolha = int.Parse(Console.ReadLine());
+
+        switch (escolha) //estrutura de controle chamada switch, que é usada para tomar decisões com base no valor de escolha.
+        {
+            case 1:
+                CadastrarProduto();
+                continuarCadastrando = PerguntarContinuarCadastrando();
+                break;
+
+            case 2:
+                VenderProduto();
+                continuarCadastrando = PerguntarContinuarCadastrando();
+                break;
+
+            case 3:
+                ComprarProduto();
+                continuarCadastrando = PerguntarContinuarCadastrando();
+                break;
+
+            case 4:
+                GerarRelatorio();
+                continuarCadastrando = PerguntarContinuarCadastrando();
+                break;
+
+            case 5:
+                Console.Clear();
+                continuarCadastrando = false; // Sair do loop e encerrar o programa
+                break;
+
+            default: //para lidar com escolhas que não correspondem a nenhum dos casos específicos.
+                Console.WriteLine("Opção inválida. Tente novamente.");
+                break;
+        }
+    }
+
+    SalvarDados();
+}
 
         static bool PerguntarContinuarCadastrando()
         {
