@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO; // Adicionei essa diretiva para usar StreamWriter e StreamReader.
 
+// Enumeração para formas de pagamento
 enum FormaPagamento
 {
     Dinheiro,
@@ -17,28 +18,34 @@ namespace Loja
 {
     class Program
     {
+        // Listas para armazenar produtos e vendas
         static List<Produto> produtos = new List<Produto>();
         static List<Venda> vendas = new List<Venda>();
         static double saldo = 0;
 
+        // Método para salvar dados em um arquivo
         static void SalvarDados()
         {
             using (StreamWriter writer = new StreamWriter("dados.txt"))
             {
+                // Escreve os dados dos produtos
                 foreach (var produto in produtos)
                 {
                     writer.WriteLine(produto.Nome + "," + produto.Marca + "," + produto.Preco + "," + produto.Quantidade);
                 }
 
+                // Escreve os dados das vendas
                 foreach (var venda in vendas)
                 {
                     writer.WriteLine(venda.Produto + "," + venda.ValorTotal + "," + venda.FormaPagamento + "," + venda.NumeroParcelas);
                 }
 
+                // Escreve o saldo
                 writer.WriteLine(saldo);
             }
         }
 
+        // Método para carregar dados de um arquivo
         static void CarregarDados()
         {
             if (File.Exists("dados.txt"))
@@ -90,11 +97,15 @@ namespace Loja
             }
         }
 
+        // Método principal
         static void Main(string[] args)
         {
+            // Configuração inicial do console
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("\r\n ____  _  ____  _____  _____ _      ____    ____  ____    ____  _____ _          _  ____  ____  ____ \r\n/ ___\\/ \\/ ___\\/__ __\\/  __// \\__/|/  _ \\  /  _ \\/  _ \\  / ___\\/  __// \\ /\\     / |/  _ \\/  _ \\/  _ \\\r\n|    \\| ||    \\  / \\  |  \\  | |\\/||| / \\|  | | \\|| / \\|  |    \\|  \\  | | ||     | || / \\|| / \\|| / \\|\r\n\\___ || |\\___ |  | |  |  /_ | |  ||| |-||  | |_/|| \\_/|  \\___ ||  /_ | \\_/|  /\\_| || \\_/|| |-||| \\_/|\r\n\\____/\\_/\\____/  \\_/  \\____\\\\_/  \\|\\_/ \\|  \\____/\\____/  \\____/\\____\\\\____/  \\____/\\____/\\_/ \\|\\____/\r\n                                                                                                     \r\n");
+
+            // Carrega os dados previamente salvos
             CarregarDados();
 
             bool continuarCadastrando = true;
@@ -138,9 +149,11 @@ namespace Loja
                 }
             }
 
+            // Salva os dados antes de sair do programa
             SalvarDados();
         }
 
+        // Método para perguntar se o usuário deseja continuar
         static bool PerguntarContinuarCadastrando()
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -158,6 +171,7 @@ namespace Loja
             return resposta == "s";
         }
 
+        // Método para mostrar o menu
         static void MostrarMenu()
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -170,8 +184,9 @@ namespace Loja
             Console.Write("\nEscolha a Opção: ");
         }
 
+        // Método para cadastrar um novo produto
         static void CadastrarProduto()
-{
+        {
     Console.Clear();
     Console.BackgroundColor = ConsoleColor.Black;
     Console.ForegroundColor = ConsoleColor.White;
@@ -208,7 +223,7 @@ namespace Loja
     Console.WriteLine("\n Produto cadastrado com sucesso!");
 }
 
-
+        // Método para realizar uma venda de produto
         static void VenderProduto()
         {
             Console.Clear();
@@ -285,54 +300,94 @@ namespace Loja
                 Console.WriteLine("\n Venda realizada com sucesso!");
             }
         }
-
+        // Método para realizar uma compra de produto
         static void ComprarProduto()
+{
+    Console.Clear();
+    Console.BackgroundColor = ConsoleColor.Black;
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine("\n REALIZAR COMPRA DE PRODUTO: ");
+
+    Console.WriteLine("\n Produtos disponíveis para compra:");
+
+    for (int i = 0; i < produtos.Count; i++)
+    {
+        Console.WriteLine(" " + (i + 1) + " - " + produtos[i].Nome + " (" + produtos[i].Marca + ") - Preço: R$ " + produtos[i].Preco.ToString("F2") + " - Quantidade disponível: " + produtos[i].Quantidade);
+    }
+
+    Console.WriteLine("\n 0 - Comprar um novo produto"); // Opção para comprar um novo produto
+    Console.Write("\n Escolha o número do produto que deseja comprar ou 0 para comprar um novo produto: ");
+    int numeroProduto;
+    while (!int.TryParse(Console.ReadLine(), out numeroProduto) || numeroProduto < 0 || numeroProduto > produtos.Count)
+    {
+        Console.WriteLine("Número de produto inválido. Escolha um número válido ou 0 para comprar um novo produto.");
+        Console.Write("\n Escolha o número do produto que deseja comprar ou 0 para comprar um novo produto: ");
+    }
+
+    if (numeroProduto == 0)
+    {
+        // Adicione a solicitação do nome do novo produto
+        Console.Write("\n Nome do Novo Produto: ");
+        string nome = Console.ReadLine();
+
+        // Adicione a solicitação da marca do novo produto
+        Console.Write("\n Marca do Novo Produto: ");
+        string marca = Console.ReadLine();
+
+        double preco;
+        while (true)
         {
-            Console.Clear();
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("\n REALIZAR COMPRA DE PRODUTO: ");
-
-            if (produtos.Count == 0)
-            {
-                Console.WriteLine("\n Não há produtos disponíveis para compra.");
-                return;
-            }
-
-            Console.WriteLine("\n Produtos disponíveis para compra:");
-
-            for (int i = 0; i < produtos.Count; i++)
-            {
-                Console.WriteLine(" " + (i + 1) + " - " + produtos[i].Nome + " (" + produtos[i].Marca + ") - Preço: R$ " + produtos[i].Preco.ToString("F2") + " - Quantidade disponível: " + produtos[i].Quantidade);
-            }
-
-            Console.Write("\n Escolha o número do produto que deseja comprar: ");
-            int numeroProduto;
-            while (!int.TryParse(Console.ReadLine(), out numeroProduto) || numeroProduto < 1 || numeroProduto > produtos.Count)
-            {
-                Console.WriteLine("Número de produto inválido. Escolha um número válido.");
-                Console.Write("\n Escolha o número do produto que deseja comprar: ");
-            }
-
-            int indiceProduto = numeroProduto - 1;
-            Produto produtoSelecionado = produtos[indiceProduto];
-
-            Console.Write("\n Quantidade a ser comprada: ");
-            int quantidadeComprada;
-            while (!int.TryParse(Console.ReadLine(), out quantidadeComprada) || quantidadeComprada < 1)
-            {
-                Console.WriteLine("Quantidade inválida. Insira um valor válido.");
-                Console.Write("\n Quantidade a ser comprada: ");
-            }
-
-            double valorTotal = produtoSelecionado.Preco * quantidadeComprada;
-            saldo -= valorTotal;
-
-            produtoSelecionado.Quantidade += quantidadeComprada;
-
-            Console.WriteLine("\n Compra realizada com sucesso!");
+            // Adicione a solicitação do preço do novo produto
+            Console.Write("\n Preço do Novo Produto (RS): ");
+            if (double.TryParse(Console.ReadLine(), out preco) && preco > 0)
+                break;
+            Console.WriteLine("Preço inválido. Insira um valor válido.");
         }
 
+        int quantidade;
+        while (true)
+        {
+            // Adicione a solicitação da quantidade do novo produto
+            Console.Write("\n Quantidade do Novo Produto: ");
+            if (int.TryParse(Console.ReadLine(), out quantidade) && quantidade >= 0)
+                break;
+            Console.WriteLine("Quantidade inválida. Insira um valor válido.");
+        }
+
+        // Adicione o novo produto à lista de produtos
+        Produto novoProduto = new Produto(nome, marca, preco, quantidade);
+        produtos.Add(novoProduto);
+
+        saldo -= preco * quantidade; // Deduz o valor da compra do saldo
+
+        Console.WriteLine("\n Novo produto cadastrado e comprado com sucesso!");
+    }
+    else
+    {
+        int indiceProduto = numeroProduto - 1;
+        Produto produtoSelecionado = produtos[indiceProduto];
+
+        Console.Write("\n Quantidade a ser comprada: ");
+        int quantidadeComprada;
+        while (true)
+        {
+            if (int.TryParse(Console.ReadLine(), out quantidadeComprada) && quantidadeComprada >= 0 && quantidadeComprada <= produtoSelecionado.Quantidade)
+                break;
+            Console.WriteLine("Quantidade inválida. Insira um valor válido.");
+            Console.Write("\n Quantidade a ser comprada: ");
+        }
+
+        double valorTotal = produtoSelecionado.Preco * quantidadeComprada;
+        saldo -= valorTotal; // Deduz o valor da compra do saldo
+
+        produtoSelecionado.Quantidade -= quantidadeComprada;
+
+        Console.WriteLine("\n Compra realizada com sucesso!");
+    }
+}
+
+
+        // Método para obter a forma de pagamento
         static FormaPagamento ObterFormaPagamento()
         {
             Console.WriteLine("\n Formas de Pagamento: ");
@@ -350,7 +405,7 @@ namespace Loja
 
             return (FormaPagamento)(escolhaPagamento - 1);
         }
-
+        // Método para gerar um relatório de vendas
         static void GerarRelatorio()
         {
             Console.Clear();
@@ -383,7 +438,7 @@ namespace Loja
             Console.WriteLine("\n Saldo atual: R$ " + saldo.ToString("F2"));
         }
     }
-
+    // Classe para representar um produto
     class Produto
     {
         public string Nome { get; set; }
@@ -399,7 +454,7 @@ namespace Loja
             Quantidade = quantidade;
         }
     }
-
+    // Classe para representar uma venda
     class Venda
     {
         public string Produto { get; set; }
