@@ -88,7 +88,7 @@ namespace Loja
                             vendas.Add(venda);
                         }
                     }
-
+                    saldo = 0;
                     if ((line = reader.ReadLine()) != null)
                     {
                         saldo = double.Parse(line);
@@ -187,41 +187,41 @@ namespace Loja
         // Método para cadastrar um novo produto
         static void CadastrarProduto()
         {
-    Console.Clear();
-    Console.BackgroundColor = ConsoleColor.Black;
-    Console.ForegroundColor = ConsoleColor.White;
-    Console.WriteLine("\n CADASTRAR PRODUTO: ");
+            Console.Clear();
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\n CADASTRAR PRODUTO: ");
 
-    Console.Write("\n Nome do Produto: ");
-    string nome = Console.ReadLine();
+            Console.Write("\n Nome do Produto: ");
+            string nome = Console.ReadLine();
 
-    Console.Write("\n Marca do Produto: ");
-    string marca = Console.ReadLine();
+            Console.Write("\n Marca do Produto: ");
+            string marca = Console.ReadLine();
 
-    double preco;
-    while (true)
-    {
-        Console.Write("\n Preço do Produto (RS): ");
-        if (double.TryParse(Console.ReadLine(), out preco) && preco > 0)
-            break;
-        Console.WriteLine("Preço inválido. Insira um valor válido.");
-    }
+            double preco;
+            while (true)
+            {
+                Console.Write("\n Preço do Produto (RS): ");
+                if (double.TryParse(Console.ReadLine(), out preco) && preco > 0)
+                    break;
+                Console.WriteLine("Preço inválido. Insira um valor válido.");
+            }
 
-    int quantidade;
-    while (true)
-    {
-        Console.Write("\n Quantidade do Produto: ");
-        if (int.TryParse(Console.ReadLine(), out quantidade) && quantidade >= 0)
-            break;
-        Console.WriteLine("Quantidade inválida. Insira um valor válido.");
-    }
+            int quantidade;
+            while (true)
+            {
+                Console.Write("\n Quantidade do Produto: ");
+                if (int.TryParse(Console.ReadLine(), out quantidade) && quantidade >= 0)
+                    break;
+                Console.WriteLine("Quantidade inválida. Insira um valor válido.");
+            }
 
-    Produto novoProduto = new Produto(nome, marca, preco, quantidade);
-    produtos.Add(novoProduto);
-    
-    Console.WriteLine("\n Preço Total pago pelo Produto Cadastrado: R$: " + (preco * quantidade).ToString("F2") + " Reais.");
-    Console.WriteLine("\n Produto cadastrado com sucesso!");
-}
+            Produto novoProduto = new Produto(nome, marca, preco, quantidade);
+            produtos.Add(novoProduto);
+
+            Console.WriteLine("\n Preço Total pago pelo Produto Cadastrado: R$: " + (preco * quantidade).ToString("F2") + " Reais.");
+            Console.WriteLine("\n Produto cadastrado com sucesso!");
+        }
 
         // Método para realizar uma venda de produto
         static void VenderProduto()
@@ -302,89 +302,89 @@ namespace Loja
         }
         // Método para realizar uma compra de produto
         static void ComprarProduto()
-{
-    Console.Clear();
-    Console.BackgroundColor = ConsoleColor.Black;
-    Console.ForegroundColor = ConsoleColor.White;
-    Console.WriteLine("\n REALIZAR COMPRA DE PRODUTO: ");
-
-    Console.WriteLine("\n Produtos disponíveis para compra:");
-
-    for (int i = 0; i < produtos.Count; i++)
-    {
-        Console.WriteLine(" " + (i + 1) + " - " + produtos[i].Nome + " (" + produtos[i].Marca + ") - Preço: R$ " + produtos[i].Preco.ToString("F2") + " - Quantidade disponível: " + produtos[i].Quantidade);
-    }
-
-    Console.WriteLine("\n 0 - Comprar um novo produto"); // Opção para comprar um novo produto
-    Console.Write("\n Escolha o número do produto que deseja comprar ou 0 para comprar um novo produto: ");
-    int numeroProduto;
-    while (!int.TryParse(Console.ReadLine(), out numeroProduto) || numeroProduto < 0 || numeroProduto > produtos.Count)
-    {
-        Console.WriteLine("Número de produto inválido. Escolha um número válido ou 0 para comprar um novo produto.");
-        Console.Write("\n Escolha o número do produto que deseja comprar ou 0 para comprar um novo produto: ");
-    }
-
-    if (numeroProduto == 0)
-    {
-        // Adicione a solicitação do nome do novo produto
-        Console.Write("\n Nome do Novo Produto: ");
-        string nome = Console.ReadLine();
-
-        // Adicione a solicitação da marca do novo produto
-        Console.Write("\n Marca do Novo Produto: ");
-        string marca = Console.ReadLine();
-
-        double preco;
-        while (true)
         {
-            // Adicione a solicitação do preço do novo produto
-            Console.Write("\n Preço do Novo Produto (RS): ");
-            if (double.TryParse(Console.ReadLine(), out preco) && preco > 0)
-                break;
-            Console.WriteLine("Preço inválido. Insira um valor válido.");
+            Console.Clear();
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\n REALIZAR COMPRA DE PRODUTO: ");
+
+            Console.WriteLine("\n Produtos disponíveis para compra:");
+
+            for (int i = 0; i < produtos.Count; i++)
+            {
+                Console.WriteLine(" " + (i + 1) + " - " + produtos[i].Nome + " (" + produtos[i].Marca + ") - Preço: R$ " + produtos[i].Preco.ToString("F2") + " - Quantidade disponível: " + produtos[i].Quantidade);
+            }
+
+            Console.WriteLine("\n 0 - Comprar um novo produto"); // Opção para comprar um novo produto
+            Console.Write("\n Escolha o número do produto que deseja comprar ou 0 para comprar um novo produto: ");
+            int numeroProduto;
+            while (!int.TryParse(Console.ReadLine(), out numeroProduto) || numeroProduto < 0 || numeroProduto > produtos.Count)
+            {
+                Console.WriteLine("Número de produto inválido. Escolha um número válido ou 0 para comprar um novo produto.");
+                Console.Write("\n Escolha o número do produto que deseja comprar ou 0 para comprar um novo produto: ");
+            }
+
+            if (numeroProduto == 0)
+            {
+                // Adicione a solicitação do nome do novo produto
+                Console.Write("\n Nome do Novo Produto: ");
+                string nome = Console.ReadLine();
+
+                // Adicione a solicitação da marca do novo produto
+                Console.Write("\n Marca do Novo Produto: ");
+                string marca = Console.ReadLine();
+
+                double preco;
+                while (true)
+                {
+                    // Adicione a solicitação do preço do novo produto
+                    Console.Write("\n Preço do Novo Produto (RS): ");
+                    if (double.TryParse(Console.ReadLine(), out preco) && preco > 0)
+                        break;
+                    Console.WriteLine("Preço inválido. Insira um valor válido.");
+                }
+
+                int quantidade;
+                while (true)
+                {
+                    // Adicione a solicitação da quantidade do novo produto
+                    Console.Write("\n Quantidade do Novo Produto: ");
+                    if (int.TryParse(Console.ReadLine(), out quantidade) && quantidade >= 0)
+                        break;
+                    Console.WriteLine("Quantidade inválida. Insira um valor válido.");
+                }
+
+                // Adicione o novo produto à lista de produtos
+                Produto novoProduto = new Produto(nome, marca, preco, quantidade);
+                produtos.Add(novoProduto);
+
+                saldo -= preco * quantidade; // Deduz o valor da compra do saldo
+
+                Console.WriteLine("\n Novo produto cadastrado e comprado com sucesso!");
+            }
+            else
+            {
+                int indiceProduto = numeroProduto - 1;
+                Produto produtoSelecionado = produtos[indiceProduto];
+
+                Console.Write("\n Quantidade a ser comprada: ");
+                int quantidadeComprada;
+                while (true)
+                {
+                    if (int.TryParse(Console.ReadLine(), out quantidadeComprada) && quantidadeComprada >= 0 && quantidadeComprada <= produtoSelecionado.Quantidade)
+                        break;
+                    Console.WriteLine("Quantidade inválida. Insira um valor válido.");
+                    Console.Write("\n Quantidade a ser comprada: ");
+                }
+
+                double valorTotal = produtoSelecionado.Preco * quantidadeComprada;
+                saldo -= valorTotal; // Deduz o valor da compra do saldo
+
+                produtoSelecionado.Quantidade -= quantidadeComprada;
+
+                Console.WriteLine("\n Compra realizada com sucesso!");
+            }
         }
-
-        int quantidade;
-        while (true)
-        {
-            // Adicione a solicitação da quantidade do novo produto
-            Console.Write("\n Quantidade do Novo Produto: ");
-            if (int.TryParse(Console.ReadLine(), out quantidade) && quantidade >= 0)
-                break;
-            Console.WriteLine("Quantidade inválida. Insira um valor válido.");
-        }
-
-        // Adicione o novo produto à lista de produtos
-        Produto novoProduto = new Produto(nome, marca, preco, quantidade);
-        produtos.Add(novoProduto);
-
-        saldo -= preco * quantidade; // Deduz o valor da compra do saldo
-
-        Console.WriteLine("\n Novo produto cadastrado e comprado com sucesso!");
-    }
-    else
-    {
-        int indiceProduto = numeroProduto - 1;
-        Produto produtoSelecionado = produtos[indiceProduto];
-
-        Console.Write("\n Quantidade a ser comprada: ");
-        int quantidadeComprada;
-        while (true)
-        {
-            if (int.TryParse(Console.ReadLine(), out quantidadeComprada) && quantidadeComprada >= 0 && quantidadeComprada <= produtoSelecionado.Quantidade)
-                break;
-            Console.WriteLine("Quantidade inválida. Insira um valor válido.");
-            Console.Write("\n Quantidade a ser comprada: ");
-        }
-
-        double valorTotal = produtoSelecionado.Preco * quantidadeComprada;
-        saldo -= valorTotal; // Deduz o valor da compra do saldo
-
-        produtoSelecionado.Quantidade -= quantidadeComprada;
-
-        Console.WriteLine("\n Compra realizada com sucesso!");
-    }
-}
 
 
         // Método para obter a forma de pagamento
